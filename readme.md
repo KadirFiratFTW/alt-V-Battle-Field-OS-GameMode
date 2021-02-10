@@ -5,7 +5,7 @@
 - This game mode developed for open source alt:V community. We are made it on Twitch Live Stream in 4 days.
 - Bu oyun modu alt:V açık kaynak topluluğu için oluşturulmuştur. Bu oyun modunu Twitch üzerinden yaptığımız canlı yayınlar esnasında 4 günde geliştirdik.
 
-#### [BenKF Twitch](#https://twitch.tv/BenKF)
+#### [BenKF Twitch](https://twitch.tv/BenKF)
 
 
 # English
