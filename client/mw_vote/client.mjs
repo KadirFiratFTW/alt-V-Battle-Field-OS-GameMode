@@ -7,6 +7,8 @@ let showCursor = false;
 let gameControls = true;
 let isFocus = false;
 
+alt.on("keyup", KeyEvent)
+
 View.on("startVote", StartVoteServer)
 
 View.on("takeControls", takeControls);
@@ -16,6 +18,8 @@ alt.onServer("start:vote", StarVote)
 alt.onServer("onVoteEnd", OnVoteEnd)
 
 alt.onServer("onVote", OnVote)
+
+
 
 function StartVoteServer(id){
     alt.emitServer("vote:start", id)
@@ -51,8 +55,6 @@ function takeControls() {
         View.unfocus();
     }
 }
-
-alt.on("keyup", KeyEvent)
 
 function KeyEvent(key) {
     if (key == 116) {
