@@ -18,9 +18,7 @@ alt.onServer("onVoteEnd", OnVoteEnd)
 alt.onServer("onVote", OnVote)
 
 function StartVoteServer(id){
-
     alt.emitServer("vote:start", id)
-
 }
 
 function StartVote(voter, target){
