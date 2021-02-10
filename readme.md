@@ -60,7 +60,6 @@ Don't forget to support us if you like this resource..
 ------------ | -------------
 Takımlar |  Kırmızı ve Mavi takım olmak üzere iki farklı takım mevcut. Her takımın kendine ait doğma (yeniden doğma dahil.) noktaları ve askeri araç noktaları mevcut. Bu noktalar çoğaltılabilir. Takım arkadaşları birbirlerini öldüremez (patlayıcılar dışında)
 Lobi Sistemi | Sunucunuzun maksimum oyuncu sayısını istediğiniz gibi şekillendirebilirsiniz çünkü bu oyun modunun kendine ait bir "Match Making" sistemi var. Oyuncu sayıları yeterli olduğunda sunucu otomatik olarak bir lobi oluşturur ve diğer oyunculardan bağımsız bir ortama taşır. Bir lobi 40 (takımlar 20-20 şeklinde bölünür.) oyuncudan oluşabilir, sistem içerisinden değiştirilebilir. 
-
 Match Making | Oyuncular, lobi arayabilirler. (Lobi listesi yok sadece aktif lobi arama sistemi var.)
 Tehcizat Sistemi | Oyuncular lobi aramaya başlamadan önce belirlenmiş silahları istedikleri gibi kullanabilirler. 
 Araçlar | Her lobide, lobilere özel oluşturulmuş araçlar bulunur. Şimdilik sadece APC, Özelleştirilmiş APC araçları mevcut. İstediğiniz araçları ekleyebilirsiniz. Her aracın kendisine ait oluşturulma noktası vardır. Araçlar patladığı zaman otomatik olarak yeniden oluşturulurlar.
