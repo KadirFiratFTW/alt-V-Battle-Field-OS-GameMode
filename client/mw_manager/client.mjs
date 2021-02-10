@@ -2,12 +2,13 @@ import * as alt from "alt"
 import * as native from "natives"
 
 const URL = "http://resource/client/mw_manager/html/index.html"
-let View = null;
 const Rels = {
     'Team1': native.addRelationshipGroup("Team1"),
     'Team2': native.addRelationshipGroup("Team2")
 }
-let Interval = null;
+
+let View = null;
+let EveryTick = null;
 let PointQue = [];
 
 alt.onServer("lobby:start", OnLobbyStart)
@@ -15,26 +16,11 @@ alt.onServer("onKill", OnKill)
 alt.onServer("onKillLog", OnKillLog)
 alt.onServer("lobby:Ended", OnLobbyEnded)
 alt.onServer("showPoint", OnPoint)
-alt.everyTick(OnTick)
+
 
 function OnLobbyStart(){
     View = new alt.WebView(URL);
-    Interval = alt.everyTick(() => {
-        alt.Player.all.filter(P => P.getSyncedMeta("Team") && P.getSyncedMeta("Team") == alt.Player.local.getSyncedMeta("Team")).forEach(P => {
-            native.setPedRelationshipGroupHash(P.scriptID, Rels['Team' + alt.Player.local.getSyncedMeta("Team")][1]);
-            native.setPedRelationshipGroupDefaultHash(P.scriptID, Rels['Team' + alt.Player.local.getSyncedMeta("Team")][1]);
-            native.setEntityCanBeDamagedByRelationshipGroup(P.scriptID, false, Rels['Team' + alt.Player.local.getSyncedMeta("Team")][1]);
-        })
-        native.setRelationshipBetweenGroups(0, Rels['Team2'][1], Rels['Team1'][1])
-        native.setRelationshipBetweenGroups(0, Rels['Team2'][1], Rels['Team2'][1])
-        native.setRelationshipBetweenGroups(0, Rels['Team1'][1], Rels['Team2'][1])
-        native.setRelationshipBetweenGroups(0, Rels['Team1'][1], Rels['Team1'][1])
-        native.setRelationshipBetweenGroups(0, Rels['Team1'][1], alt.hash("PLAYER"))
-        native.setRelationshipBetweenGroups(0, alt.hash("PLAYER"), Rels['Team1'][1])
-        native.setRelationshipBetweenGroups(0, Rels['Team2'][1], alt.hash("PLAYER"))
-        native.setRelationshipBetweenGroups(0, alt.hash("PLAYER"), Rels['Team2'][1])
-        native.setPedConfigFlag(alt.Player.local.scriptID, 184, false)
-    })
+    EveryTick = alt.everyTick(OnTick)
 }
 
 function OnKill(team1, team2){
@@ -56,6 +42,7 @@ function PlaySound(winner){
 }
 
 function OnLobbyEnded(winner){
+    alt.clearInterval(Interval);
     PlaySound(winner)
     View.emit("ended", winner, alt.Player.local.getSyncedMeta("Team"));
     alt.toggleGameControls(false);
@@ -64,6 +51,8 @@ function OnLobbyEnded(winner){
         ReturnMainMenu();
         native.triggerScreenblurFadeOut(2500)
     }, 15000);
+    alt.clearEveryTick(EveryTick)
+    EveryTick = null;
 }
 
 function OnPoint(point, pos){
@@ -71,8 +60,27 @@ function OnPoint(point, pos){
 }
 
 function OnTick(){
+    PlayerPedReleationship();
     PointQueTick();
 }
+
+function PlayerPedRelationship(){
+     alt.Player.all.filter(P => P.getSyncedMeta("Team") && P.getSyncedMeta("Team") == alt.Player.local.getSyncedMeta("Team")).forEach(P => {
+            native.setPedRelationshipGroupHash(P.scriptID, Rels['Team' + alt.Player.local.getSyncedMeta("Team")][1]);
+            native.setPedRelationshipGroupDefaultHash(P.scriptID, Rels['Team' + alt.Player.local.getSyncedMeta("Team")][1]);
+            native.setEntityCanBeDamagedByRelationshipGroup(P.scriptID, false, Rels['Team' + alt.Player.local.getSyncedMeta("Team")][1]);
+        })
+        native.setRelationshipBetweenGroups(0, Rels['Team2'][1], Rels['Team1'][1])
+        native.setRelationshipBetweenGroups(0, Rels['Team2'][1], Rels['Team2'][1])
+        native.setRelationshipBetweenGroups(0, Rels['Team1'][1], Rels['Team2'][1])
+        native.setRelationshipBetweenGroups(0, Rels['Team1'][1], Rels['Team1'][1])
+        native.setRelationshipBetweenGroups(0, Rels['Team1'][1], alt.hash("PLAYER"))
+        native.setRelationshipBetweenGroups(0, alt.hash("PLAYER"), Rels['Team1'][1])
+        native.setRelationshipBetweenGroups(0, Rels['Team2'][1], alt.hash("PLAYER"))
+        native.setRelationshipBetweenGroups(0, alt.hash("PLAYER"), Rels['Team2'][1])
+        native.setPedConfigFlag(alt.Player.local.scriptID, 184, false)
+}
+    
 
 function PointQueTick(){
  if (!PointQue.length) { return; }
