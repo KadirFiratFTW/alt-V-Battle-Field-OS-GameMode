@@ -1,0 +1,94 @@
+body{
+    padding:0;
+    margin:0;
+    font-family: 'Open Sans', sans-serif;
+}
+
+*{
+    box-sizing: border-box;
+ 
+}
+
+.vote * {
+    display:block;
+}
+
+.hidden{
+    display:none;
+}
+
+.vote, .startVote{
+    width:350px;
+    background-color: #191919;
+    border-radius:3px;
+    box-shadow: 0 0 3px rgba(26, 26, 26, 0.466);
+    text-align: center;
+    color:white;
+    position:absolute;
+    top:300px;
+    left:50px;
+
+}
+
+.startVote{
+    padding:10px;
+}
+
+.startVote div {
+    padding:5px 10px;
+    font-size:17px;
+    border-radius: 3px;
+    overflow:hidden;
+    background-color: rgb(53, 53, 53);
+    margin:3px;
+}
+
+.startVote div:hover {
+    background-color: rgb(87, 86, 86);
+    cursor:pointer;
+}
+
+.voteY{
+    color:limegreen;
+}
+
+.voteN{
+    color:rgb(207, 38, 38);
+}
+
+.instractions{
+    margin-top:15px;
+    display:flex;
+    width:100%;
+    justify-content: center;
+    align-items: center;
+    overflow:hidden;
+}
+
+.instractions * {
+    width:50%;
+    padding:10px 5px;
+}
+
+.instractions div{
+    background-color:rgb(207, 38, 38);
+    color:white;
+}
+
+
+.instractions div:nth-child(1){
+    background-color:rgb(38, 141, 38);
+    color:white;
+}
+
+.close{
+    width:32px;
+    height:32px;
+    line-height: 16px;
+    color:white;
+    background-color:maroon !important;
+    text-align: center;
+    cursor: pointer;
+    margin-left:5px;
+    display:inline-block;
+}

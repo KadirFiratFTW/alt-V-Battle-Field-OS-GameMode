@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Menu</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+    <div class="container" id="app">
+        <div class="game-stats" v-if="!preparing">
+            <div class="activeRooms">Welcome {{userName}}</div>
+            <div class="activeRooms">Active Players : {{allPlayerCount}}</div>
+            <div class="palfg">{{playersLooking}} Players Searching For Game</div>
+            <div class="activePlayers">Active Lobbies : {{activeRooms}}</div>
+        </div>
+
+        <div class="loadout">
+
+            <div class="primary" @click="showSelector('primary')">
+                Primary Weapon <br />
+                {{loadout.find(L => L.type == "primary").val}}
+            </div>
+            <div class="secondary" @click="showSelector('secondary')">
+                Secondary Weapon<br />
+                {{loadout.find(L => L.type == "secondary").val}}
+
+            </div>
+            <div class="explosive" @click="showSelector('explosive')">
+                Explosive<br />
+                {{loadout.find(L => L.type == "explosive").val}}
+
+            </div>
+
+        </div>
+
+        <div class="loadout-selector" v-if="selectorShow">
+            <div class="primary" v-if="selectorType == 'primary'">
+                <div class="primary-weapon" @click="loadout.find(L => L.type == 'primary').val = 'M4'">
+                    M4
+                </div>
+
+                <div class="primary-weapon" @click="loadout.find(L => L.type == 'primary').val = 'AK47'">
+                    AK47
+                </div>
+
+                <div class="primary-weapon" @click="loadout.find(L => L.type == 'primary').val = 'Heavy Sniper'">
+                    Heavy Sniper
+                </div>
+            </div>
+            <div class="secondary" v-if="selectorType == 'secondary'">
+                <div class="secondary-weapon" @click="loadout.find(L => L.type == 'secondary').val = 'Deagle'">
+                    Deagle
+                </div>
+
+                <div class="secondary-weapon" @click="loadout.find(L => L.type == 'secondary').val = 'Revolver MKII'">
+                    Revolver MKII
+                </div>
+
+                <div class="secondary-weapon" @click="loadout.find(L => L.type == 'secondary').val = 'AP Pistol'">
+                    AP Pistol
+                </div>
+            </div>
+            <div class="explosives" v-if="selectorType == 'explosive'">
+                <div class="explosive" @click="loadout.find(L => L.type == 'explosive').val = 'Sticky Bomb'">
+                    Sticky Bomb
+                </div>
+
+                <div class="explosive" @click="loadout.find(L => L.type == 'explosive').val = 'Grenade Launcher'">
+                    Grenade Launcher
+                </div>
+
+                <div class="explosive" @click="loadout.find(L => L.type == 'explosive').val = 'Stinger'">
+                    Stinger
+                </div>
+            </div>
+        </div>
+
+        <div class="interactions" v-if="!preparing">
+
+            <div class="maps" style="display:none;">
+            </div>
+
+            <a href="javascript:;" @click="startSearch">{{isSearching ? 'Stop Searching':'Search Game'}}</a>
+
+        </div>
+    </div>
+
+</body>
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script src="js/app.js"></script>
+
+</html>

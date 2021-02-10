@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lobby Vote</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div id="app">
+
+        <div class="vote" v-if="voteStarted">
+            <h2>{{VoteTitle}}</h2>
+            <b>{{Desc}}</b>
+            <b class="voteY">Y : {{VoteY}}</b>
+            <b class="voteN">N : {{VoteN}}</b>
+            <div class="instractions">
+                <div>F1 - Yes</div>
+                <div>F2 - No</div>
+            </div>
+        </div>
+
+        <div class="startVote" v-if="showVoteMenu">
+            <h3>Oylama Başlat <div class="close" @click="close()">X</div>
+            </h3>
+            <div v-for="P of playerList" @click="startVote(P.id)">{{P.name}}</div>
+        </div>
+
+
+    </div>
+
+
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script src="js/app.js"></script>
+
+</html>

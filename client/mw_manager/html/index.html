@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MW MANAGER</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Exo:ital,wght@0,200;0,300;0,800;1,100&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="container" id="app">
+
+        <div class="points">
+            Score : {{killPoints}}
+        </div>
+
+        <div class="killCounts">
+            <div class="team1">{{killTeam1}}</div>
+            <div class="team2">{{killTeam2}}</div>
+        </div>
+
+        <div class="killLog">
+
+            <div class="list-item" v-for="k in killLogs">
+                <div :class="'team'+k.killerTeam">{{k.killerName}}</div>
+                <div><img :src="'./img/combat/'+k.weapon+'.png'">
+                </div>
+                <div :class="'team'+k.victimTeam">{{k.victimName}}</div>
+            </div>
+
+
+        </div>
+
+        <h1 v-if="endState">{{endText}}</h1>
+
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+
+<script src="js/app.js"></script>
+
+</html>

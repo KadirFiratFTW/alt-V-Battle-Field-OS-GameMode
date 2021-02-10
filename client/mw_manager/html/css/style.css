@@ -1,0 +1,121 @@
+body{
+    padding:0;
+    margin:0;
+    font-family: 'Exo', sans-serif;
+}
+
+
+.container{
+    width:100%;
+    height:100%;
+    display:flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+
+.killCounts{
+    width:400px;
+    display:flex;
+    box-shadow:0 0 5px rgba(24, 24, 24, 0.719);
+    font-weight: bold;
+}
+
+.killCounts .team1{
+    background-color: maroon;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    width:50%;
+    font-size:40px;
+    color:white;
+    padding:15px;
+}
+
+.killCounts .team2{
+    background-color: rgb(17, 47, 179);
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    width:50%;
+    font-size:40px;
+    color:white;
+    padding:15px;
+}
+
+
+.killLog{
+    min-width:550px;
+    max-width:650px;
+    position:absolute;
+    top:10px;
+    right:10px;
+    transform-origin: 100% 0%;
+    transform:scale(0.7);
+}
+
+.killLog div.list-item{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    background-color:#1919193a;
+    box-shadow: 0 0 3px #19191985;
+    height:45px;
+    overflow:hidden;
+    color:white;
+    font-size:17px;
+    margin:5px;
+    border-radius:5px;
+}
+
+img{
+    max-height:36px;
+    display:inline-block;
+}
+
+.killLog div.list-item div:nth-child(1), .killLog div.list-item div:nth-child(3){
+    width:33%;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    
+}
+
+.killLog div.list-item div:nth-child(2){
+    width:33%;
+    text-align: center;
+}
+
+
+
+.list-item .team1{
+    color:rgb(233, 59, 59);
+    font-weight:bolder;
+}
+
+.list-item .team2{
+    color:rgb(50, 98, 255);
+    font-weight:bolder;
+}
+
+h1{
+    font-size: 100px;
+    color: white;
+    text-shadow: 0 0 3px black;
+    position: absolute;
+    top: 25%;
+}
+
+.points{
+    width:200px;
+    background-color: rgba(15, 15, 15, 0.171);
+    color:white;
+    text-shadow: 0 0 3px black;
+    font-size:20px;
+    padding:5px;
+    position: absolute;
+    top:0;
+    left:0;
+    font-weight: bold;
+}

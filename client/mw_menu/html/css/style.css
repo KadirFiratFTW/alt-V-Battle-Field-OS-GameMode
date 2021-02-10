@@ -1,0 +1,99 @@
+body{
+    margin:0;
+    padding:0;
+    width:100vw;
+    height:100vh;
+    font-family: 'Open Sans', sans-serif;
+}
+
+*{
+    box-sizing:border-box;
+}
+
+.container{
+    width:100vw;
+    height:100vh;
+    background-color:#191919b7;
+    padding:30px;
+    background-image:url("../img/bg.jpg");
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    
+}
+
+.game-stats{
+    width:350px;
+    padding:5px;
+    position:absolute;
+    top:50px;
+    left:50px;
+}
+
+.game-stats * {
+    margin:5px;
+    font-size:17px;
+    font-weight: bold;
+    background-color:#191919b7;
+    padding:15px;
+    color:white;
+}
+
+.interactions{
+    width:350px;
+    padding:5px;
+    position:absolute;
+    bottom:50px;
+    right:50px;
+}
+
+.interactions * {
+    margin:5px;
+    font-size:17px;
+    font-weight: bold;
+    background-color:#191919b7;
+    padding:15px;
+    color:white;
+}
+
+a{
+    text-decoration: none;
+    display: block;
+}
+
+.loadout{
+    width:350px;
+    padding:5px;
+    position:absolute;
+    top:285px;
+    left:50px;
+}
+
+.loadout * {
+    margin:5px;
+    font-size:17px;
+    font-weight: bold;
+    background-color:#191919b7;
+    padding:15px;
+    color:white;
+    cursor:pointer;
+}
+
+
+.loadout-selector{
+    width:350px;
+    padding:5px;
+    position:absolute;
+    top:250px;
+    left:420px;
+}
+
+.loadout-selector * {
+    margin:5px;
+    font-size:17px;
+    font-weight: bold;
+    background-color:#191919b7;
+    padding:15px;
+    color:white;
+    cursor:pointer;
+}
