@@ -16,38 +16,38 @@ Its easy. Move downloaded files into your resource directory and add "alt-field"
 
 Feature Name | Description
 ------------ | -------------
-Team | There is two team named with "Team Red" and "Team Blue". Each team has specific spawn points and vehicle spawn points. Teammates can not kill each other (except explosives)
-Lobby system | You can limit your server max player limit to 4K because this gamemode supports lobbies. Lobbies consist of 40 players. Each lobby has specific dimension.
-Match Making | Players can search for lobbies. (There is no server list, its MM)
-Loadout | Players can prepare their loadouts with limited weapons.
-Vehicles | Lobbies has their own vehicles. Currently this mode allowed APC, Customized APC vehicles. You can add more, what do you want.. Each vehicle has specific spawn position on team side. Vehicles are automatically respawn after dead.
-Score System | In-game team score table. Lobby will automatically end when a team will achive 100 kills. Players are moving to main menu after 15 seconds. 
-Kill Points | Each player can gain kill points while killing other team players. Maybe in the future we can add kill point shop to this game mode.
-Vote System | Team players can start vote for kick a player if he is hacker or something like toxic.
-Combat Feed | There is a combat feed system. You can see there which player kills which player with which weapon or which vehicle.
+Team | There are two teams named "Team Red" and "Team Blue". Each team has specific spawn points and vehicle spawn points. Teammates can not kill each other (except explosives)
+Lobby system | You can set the player limit of your server up to 4K because this gamemode supports lobbies. Lobbies consist of 40 players (Changeable from Lobby Manager Script). Each lobby has specific dimensions.
+Match Making | Players can search for lobbies. (There is no server list, its just MM)
+Loadout | Players can prepare their loadouts with limited weapons. You can add more weapon choices for players.
+Vehicles | Lobbies have their own vehicles. Currently this mode allows APC and Customized APC vehicles. You can add more if you want to.. Each vehicle has specific spawn positions on team side. Vehicles are respawning automatically after death.
+Score System | In-game team score table. Lobby will automatically end as soon as one team reaches 100 kills. Players will return to main menu after 15 seconds. 
+Kill Points | Each player can gain kill points while killing enemies. Maybe in the future we can add "kill points shop" for this game mode.
+Vote System | Team players can start a vote to kick a player if he is cheater or something like toxic (They can start the vote just for teammates).
+Combat Feed | There is a combat feed system. It shows which player kills which player with which weapon or which vehicle.
 Map Support (WIP) | You can add specific map coords on city.
-Go back to mission field | We are still working on it. We want to warn and kill a player when he go out of battlefield.
+Go back to mission field | We are still working on it. We want to warn firstly then kill a player when he go out of battle field.
 
 
 
-### P.S. : This game mode is doesnt made by professional coders. Maybe there is trash codes, you can try to fix them before blaming/flaming us...
+### P.S. : This game mode is not made by professional coders. Maybe there are trash codes, you can try to fix them before blaming/flaming us...
 
 
 # In The Future (WIP)
 
 Feature Name | Description
 ------------ | -------------
-More Maps | We want to add more maps to this game mode and more vehicles.. (Aircrafts, Ships etc.)
-Maybe Server-List ? | Maybe we can add an server-list system to this game mode. I think it would be cool.
-Play with your friend (Duo, Squad) | I dont know how can i do this but i will try.
-More Vehicles | There is just 2 vehicle for each team. We want to increase it.
-Kill Points Shop | We want to add kill points shop like Battlefront.
-Spawn on your teammate | We made this game with inspired by Battlefield. Why not?
+More Maps | We want to add more maps to this game mode and more vehicles in the future.. (Aircrafts, Ships etc.)
+Maybe Server-List ? | Maybe we can add a server-list system to this game mode. I think it would be cool.
+Play with your friend (Duo, Squad) | I dont know how i can do this but i will try.
+More Vehicles | There are just 2 vehicles for each team. We want to increase it.
+Kill Points Shop | We want to add kill points shop like it is in Battlefront.
+Spawn on your teammate | This game mode is inspired by Battlefield. Why not?
 
 
 # Do not forget..
 
-Don't forget to support us if you like this resource..
+Don't forget to support us if you like this game mode..
 
 
 # Turkish
