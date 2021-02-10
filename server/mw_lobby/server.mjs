@@ -14,6 +14,33 @@ const POINTS = {
     'kill': 100
 }
 
+const WEAPON_COMBAT_TAG = {
+    '3523564046': "1",
+    '584646201': "2",
+    '3415619887': "3",
+    '3220176749': "4",
+    '2210333304': "5",
+    "205991906": "6",
+    "2726580491": "7",
+    "1672152130": "8",
+    "741814745": "9",
+    "328167896": "v3",
+    "1151689097": "v3",
+    "190244068": "v3",
+    "507170720": "v4",
+    "711953949": "v4",
+    "2741846334": "v4",
+    "1945616459": "v4",
+    "3800181289": "v1",
+    "3473446624": "v1",
+    "153396725": "v2",
+    "785467445": "v2",
+    "1119518887": "v2",
+    "2971687502": "v2",
+    "2722615358": "v5",
+    "2725352035": "FIST"
+}
+
 const WeaponConst = {
     'M4': "weapon_carbinerifle",
     'AK47': "weapon_assaultrifle",
@@ -127,23 +154,28 @@ const MAP_CONSTANTS = [
     }
 ]
 
-alt.setInterval(() => {
 
+alt.on("vehicleDestroy", OnVehicleDestroy)
+alt.on("playerConnect", OnPlayerConnect)
+alt.on("playerDeath", OnPlayerDeath)
+
+alt.onClient("vote:start", OnVoteStart)
+alt.onClient("GetLoadout", GetLoadout)
+alt.onClient("vote", OnVote)
+
+alt.setInterval(LobbyManagerTick, 1000)
+alt.setInterval(OnVoteTick, 60000)
+
+function LobbyManagerTick(){
     const getPlayers = alt.Player.all.filter(P => P.getSyncedMeta("searching") && !P.getSyncedMeta("Room"));
-    const RoomCount = Math.floor(getPlayers.length / MaxPlayers);
     if (!getPlayers.length) { return; }
+    const RoomCount = Math.floor(getPlayers.length / MaxPlayers);
     if (!RoomCount) { return; }
-
     for (let i = 0; i < RoomCount; i++) {
-
         const ChunkPlayers = lodash.chunk(lodash.shuffle(getPlayers), MaxPlayers)[0];
         generateRoom(0, ChunkPlayers);
-
     }
-
-
-}, 1000)
-
+}
 
 async function generateRoom(Map, Players) {
     const MapDataTeam1 = MAP_CONSTANTS[Map].Spawns.Team1.Players
@@ -151,10 +183,10 @@ async function generateRoom(Map, Players) {
     const MapDataTeamVeh1 = MAP_CONSTANTS[Map].Spawns.Team1.Vehicles
     const MapDataTeamVeh2 = MAP_CONSTANTS[Map].Spawns.Team2.Vehicles;
     const ROOM_ID = uuid.v4();
-    Players = lodash.shuffle(Players);
     const Chunked = lodash.chunk(Players, MaxPlayersTeam);
     const Dimension = Lobbies.length + 1;
-
+    Players = lodash.shuffle(Players);
+    
     let counter = 0;
 
     for (let P of Chunked[0]) {
@@ -162,33 +194,26 @@ async function generateRoom(Map, Players) {
         P.setSyncedMeta("Room", ROOM_ID)
         P.setSyncedMeta("Map", Map)
         P.setSyncedMeta("searching", false)
-        alt.emitClient(P, "lobby:prepare")
         P.dimension = Dimension;
         P.spawn(MapDataTeam1[counter].x, MapDataTeam1[counter].y, MapDataTeam1[counter].z, 0)
-
-
         P.model = "s_m_y_blackops_02";
         P.health = 200;
-
+        alt.emitClient(P, "lobby:prepare")
         Players = Players.filter(p => p.id !== P.id);
     }
-
 
     counter = 0;
 
     for (let P of Chunked[1]) {
-
         P.setSyncedMeta("Team", 2)
         P.setSyncedMeta("Room", ROOM_ID)
         P.setSyncedMeta("Map", Map)
         P.setSyncedMeta("searching", false)
-        alt.emitClient(P, "lobby:prepare")
         P.dimension = Dimension;
         P.spawn(MapDataTeam2[counter].x, MapDataTeam2[counter].y, MapDataTeam2[counter].z, 0)
-
         P.model = "s_m_y_blackops_02"
         P.health = 200;
-
+        alt.emitClient(P, "lobby:prepare")
         Players = Players.filter(p => p.id !== P.id);
     }
 
@@ -205,177 +230,93 @@ async function generateRoom(Map, Players) {
     //Generate Vehicles
 
     for (let V of MapDataTeamVeh1) {
-
         const Veh = new alt.Vehicle(V.vehicle, V.pos.x, V.pos.y, V.pos.z, V.rot.x, V.rot.y, V.rot.z);
-        Veh.modKit = 1
-        for (let M of V.modkits) {
-            Veh.setMod(M.modkit, M.val);
-        }
         Veh.dimension = Dimension;
         Veh.setSyncedMeta("VehID", V.id)
         Veh.setSyncedMeta("Team", "Team1");
         Veh.setSyncedMeta("Map", Map);
-
-    }
-
-    for (let V of MapDataTeamVeh2) {
-
-        const Veh = new alt.Vehicle(V.vehicle, V.pos.x, V.pos.y, V.pos.z, V.rot.x, V.rot.y, V.rot.z);
         Veh.modKit = 1
         for (let M of V.modkits) {
             Veh.setMod(M.modkit, M.val);
         }
+    }
+
+    for (let V of MapDataTeamVeh2) {
+        const Veh = new alt.Vehicle(V.vehicle, V.pos.x, V.pos.y, V.pos.z, V.rot.x, V.rot.y, V.rot.z);
         Veh.dimension = Dimension;
         Veh.setSyncedMeta("VehID", V.id)
         Veh.setSyncedMeta("Team", "Team2");
         Veh.setSyncedMeta("Map", Map);
-
+        Veh.modKit = 1
+        for (let M of V.modkits) {
+            Veh.setMod(M.modkit, M.val);
+        }
     }
-
     Lobbies.push({ ...Data });
-    alt.emit("onServerCreated", ROOM_ID);
     StartGame(ROOM_ID);
+    alt.emit("onServerCreated", ROOM_ID);
 }
 
 
 async function StartGame(Room) {
-
     const RoomPlayers = alt.Player.all.filter(P => P.getSyncedMeta("Room") == Room)
     if (!RoomPlayers.length) { return; }
-
     RoomPlayers.forEach(P => {
         alt.emitClient(P, "lobby:start")
     })
-
 }
 
-alt.on("vehicleDestroy", (veh) => {
+
+function OnVehicleDestroy(veh){
     const Dimension = veh.dimension;
     const TempData = MAP_CONSTANTS[veh.getSyncedMeta("Map")].Spawns[veh.getSyncedMeta("Team")].Vehicles.find(V => V.id == veh.getSyncedMeta("VehID"));
     const Team = veh.getSyncedMeta("Team");
     const Map = veh.getSyncedMeta("Map");
-
     veh.destroy();
     const Veh = new alt.Vehicle(TempData.vehicle, TempData.pos.x, TempData.pos.y, TempData.pos.z, TempData.rot.x, TempData.rot.y, TempData.rot.z);
-    Veh.modKit = 1
-    for (let M of TempData.modkits) {
-        Veh.setMod(M.modkit, M.val);
-    }
     Veh.dimension = Dimension;
     Veh.setSyncedMeta("VehID", TempData.id)
     Veh.setSyncedMeta("Team", Team);
     Veh.setSyncedMeta("Map", Map);
-
-
-})
-
-const WEAPON_COMBAT_TAG = {
-    '3523564046': "1",
-    '584646201': "2",
-    '3415619887': "3",
-    '3220176749': "4",
-    '2210333304': "5",
-    "205991906": "6",
-    "2726580491": "7",
-    "1672152130": "8",
-    "741814745": "9",
-    "328167896": "v3",
-    "1151689097": "v3",
-    "190244068": "v3",
-    "507170720": "v4",
-    "711953949": "v4",
-    "2741846334": "v4",
-    "1945616459": "v4",
-    "3800181289": "v1",
-    "3473446624": "v1",
-    "153396725": "v2",
-    "785467445": "v2",
-    "1119518887": "v2",
-    "2971687502": "v2",
-    "2722615358": "v5",
-    "2725352035": "FIST"
+    Veh.modKit = 1
+    for (let M of TempData.modkits) {
+        Veh.setMod(M.modkit, M.val);
+    }
 }
 
-
-alt.on("playerDeath", (victim, killer, weapon) => {
+function OnPlayerDeath(victim, killer, weapon){
+    const GetRoom = killer.getSyncedMeta("Room")
+    const FindRoom = Lobbies.find(L => L.RoomID == GetRoom);
+    if (!FindRoom) return;
+    const TempData = lodash.shuffle(MAP_CONSTANTS[victim.getSyncedMeta("Map")].Spawns["Team" + victim.getSyncedMeta("Team")].Players)[0];
+    const Loadout = victim.getSyncedMeta("loadout");
+    
+    killer = (killer) ? killer:victim;
+    
     if (killer.id !== victim.id) {
         //Send kill points to killer.
         alt.emitClient(killer, "showPoint", POINTS['kill'], victim.pos)
     }
-    
-    //TRASH CODE ALERT. This code needs to be refactoring.
-    if (!killer || killer.id == victim.id) {
-        //SELF KILL
-        const GetRoom = victim.getSyncedMeta("Room")
-        const FindRoom = Lobbies.find(L => L.RoomID == GetRoom);
-        if (!FindRoom) {
-            return;
-        }
-
-        const TempData = lodash.shuffle(MAP_CONSTANTS[victim.getSyncedMeta("Map")].Spawns["Team" + victim.getSyncedMeta("Team")].Players)[0];
-        const Loadout = victim.getSyncedMeta("loadout");
-        victim.spawn(TempData.x, TempData.y, TempData.z, 10000);
-        victim.removeAllWeapons();
-        for (let L of Loadout) {
-
-            victim.giveWeapon(alt.hash(WeaponConst[L.val]), Ammo[L.type], Boolean(L.type == "primary"));
-
-        }
-
-        const roomPlayers = alt.Player.all.filter(P => P.getSyncedMeta("Room") == GetRoom)
-
-        for (let P of roomPlayers) {
-            alt.emitClient(P, "onKill", FindRoom.TeamKill1, FindRoom.TeamKill2)
-            alt.emitClient(P, "onKillLog", victim.name, victim.name, victim.getSyncedMeta("Team"), victim.getSyncedMeta("Team"), "SELF", false)
-        }
-        CheckGame(GetRoom, FindRoom.TeamKill1, FindRoom.TeamKill2);
-        return;
-    }
-
-
-    const GetRoom = killer.getSyncedMeta("Room")
-    const FindRoom = Lobbies.find(L => L.RoomID == GetRoom);
-    if (!FindRoom) {
-        return;
-    }
-
-    const TempData = lodash.shuffle(MAP_CONSTANTS[victim.getSyncedMeta("Map")].Spawns["Team" + victim.getSyncedMeta("Team")].Players)[0];
-    const Loadout = victim.getSyncedMeta("loadout");
     victim.spawn(TempData.x, TempData.y, TempData.z, 10000);
     victim.removeAllWeapons();
     for (let L of Loadout) {
-
         victim.giveWeapon(alt.hash(WeaponConst[L.val]), Ammo[L.type], Boolean(L.type == "primary"));
-
     }
 
     const roomPlayers = alt.Player.all.filter(P => P.getSyncedMeta("Room") == GetRoom)
     FindRoom['TeamKill' + killer.getSyncedMeta("Team")] = parseInt(FindRoom['TeamKill' + killer.getSyncedMeta("Team")]) + 1;
-
     for (let P of roomPlayers) {
         alt.emitClient(P, "onKill", FindRoom.TeamKill1, FindRoom.TeamKill2)
         alt.emitClient(P, "onKillLog", killer.name, victim.name, killer.getSyncedMeta("Team"), victim.getSyncedMeta("Team"), WEAPON_COMBAT_TAG[weapon], false)
     }
     CheckGame(GetRoom, FindRoom.TeamKill1, FindRoom.TeamKill2);
-
-})
-
+}
 
 async function CheckGame(room, t1, t2) {
-    let winner = null;
-    //Maybe there can be nice way for this conditions.
-    if (t1 >= MatchEndKillCount) {
-        winner = 1;
-    }
-
-    if (t2 >= MatchEndKillCount) {
-        winner = 2;
-    }
-
+    let winner = (t1 >= MatchEndKillCount) ? 1:(t2 >= MatchEndKillCount) 2: null;
     if (!winner) {
         return;
     }
-
     const GetPlayers = alt.Player.all.filter(P => P.getSyncedMeta("Room") == room)
     for (let P of GetPlayers) {
         alt.emitClient(P, "lobby:Ended", winner);
@@ -384,39 +325,32 @@ async function CheckGame(room, t1, t2) {
         P.setSyncedMeta("Map", false)
         P.dimension = 0;
         P.spawn(0, 0, 60, 16000)
-
     }
     Lobbies = Lobbies.filter(L => L.Room !== room);
     alt.emit("onServerCreated", false);
 }
 
-alt.on("playerConnect", (p) => {
+function OnPlayerConnect(p){
     p.setSyncedMeta("loadout", [
         { 'type': 'primary', 'val': "M4" },
         { 'type': 'secondary', 'val': "Deagle" },
         { 'type': 'explosive', 'val': "Sticky Bomb" }
     ]);
-    let username = p.name;
-    const isUsernameUsed = alt.Player.all.find(P => P.name == username && P.id !== p.id);
-    if (isUsernameUsed) {
-        username = p.name + " (" + p.id + ")";
-    }
+    const username = (alt.Player.all.find(P => P.name == p.name && P.id !== p.id)) ? p.name+"("+p.id+")":p.name;
     p.setSyncedMeta("UserName", username);
     alt.emitClient(p, "Init")
-})
+}
 
-
-alt.onClient("GetLoadout", (player) => {
+function GetLoadout(player){
     const Loadout = player.getSyncedMeta("loadout");
     for (let L of Loadout) {
         player.giveWeapon(alt.hash(WeaponConst[L.val]), Ammo[L.type], Boolean(L.type == "primary"));
     }
-})
+}
 
 //* Vote System *//
 
-alt.onClient("vote:start", (player, target) => {
-
+function OnVoteStart(player, target){
     const Room = player.getSyncedMeta("Room");
     const RoomObject = Lobbies.find(L => L.RoomID == Room);
     const Target = alt.Player.getByID(target);
@@ -424,41 +358,34 @@ alt.onClient("vote:start", (player, target) => {
     if (!Target) { return; }
     if (!RoomObject) { return; }
     if (RoomObject["ActiveVoteTeam" + Team].isActive) { return; }
+    
     RoomObject["ActiveVoteTeam" + Team].isActive = true;
-
     RoomObject["ActiveVoteTeam" + Team].yes = 0;
     RoomObject["ActiveVoteTeam" + Team].team = Team;
     RoomObject["ActiveVoteTeam" + Team].no = 0;
     RoomObject["ActiveVoteTeam" + Team].voter = player.id;
     RoomObject["ActiveVoteTeam" + Team].target = Target.id;
     RoomObject["ActiveVoteTeam" + Team].startDate = Date.now() + 60000;
-
+    
     const RoomPlayers = alt.Player.all.filter(P => P.getSyncedMeta("Room") == Room && player.getSyncedMeta("Team") == Team);
     if (!RoomPlayers.length) return;
-
     for (let P of RoomPlayers) {
         alt.emitClient(P, "start:vote", player.getSyncedMeta("UserName"), Target.getSyncedMeta("UserName"));
     }
+}
 
-})
-
-alt.onClient("vote", async (player, type) => {
-
+async function OnVote(player, type) {
     const ROOM = player.getSyncedMeta("Room");
     const Team = player.getSyncedMeta("Team");
-
     const FindRoom = Lobbies.find(L => L.RoomID == ROOM && Boolean(L['ActiveVoteTeam' + Team].isActive));
     if (!FindRoom) return;
-
     if (type) { //VoteY
         FindRoom['ActiveVoteTeam' + Team].yes++;
     } else { // VoteN
         FindRoom['ActiveVoteTeam' + Team].no++;
     }
-
     const RoomPlayers = alt.Player.all.filter(P => P.getSyncedMeta("Room") == ROOM && P.getSyncedMeta("Team") == Team);
     if (!RoomPlayers.length) return;
-
     for (let P of RoomPlayers) {
         alt.emitClient(P, "onVote", type, (type) ? FindRoom['ActiveVoteTeam' + Team].yes : FindRoom['ActiveVoteTeam' + Team].no)
     }
@@ -467,56 +394,40 @@ alt.onClient("vote", async (player, type) => {
         KickPlayer(ROOM, FindRoom['ActiveVoteTeam' + Team].target);
         endVote(ROOM, Team);
     }
-})
-
+}
 
 function endVote(roomID, team) {
-
     const FindRoom = Lobbies.find(L => L.RoomID == roomID);
     if (FindRoom) {
         FindRoom['ActiveVoteTeam' + team].isActive = false;
     }
-
     const RoomPlayers = alt.Player.all.filter(P => P.getSyncedMeta("Room") == roomID && P.getSyncedMeta("Team") == team);
     if (!RoomPlayers.length) return;
-
     for (let P of RoomPlayers) {
         alt.emitClient(P, "onVoteEnd")
     }
-
 }
 
 function KickPlayer(room, target) {
-
     const Player = alt.Player.all.find(P => P.id == target)
     if (Player && Player.getSyncedMeta("Room") == room) {
-
         Player.kick("Oylama ile oyundan atıldın.");
         //TODO : Send all players notification of voting result;
     }
-
 }
 
 //VoteInterval
 
-alt.setInterval(() => {
-
+function OnVoteTick(){
     const Team1Vote = Lobbies.filter(L => L.ActiveVoteTeam1.isActive && L.ActiveVoteTeam1.startDate >= Date.now())
     const Team2Vote = Lobbies.filter(L => L.ActiveVoteTeam2.isActive && L.ActiveVoteTeam2.startDate >= Date.now())
     const isVoteActive = [...Team1Vote, ...Team2Vote];
     if (!isVoteActive.length) { return; }
-
-
     for (let L of isVoteActive) {
-
         L.isActive = false;
         const Players = alt.Player.all.filter(P => P.getSyncedMeta("Room") == L.RoomID && P.getSyncedMeta("Team") == L.team)
         for (let P of Players) {
-
             alt.emitClient(P, "endVote");
-
         }
-
     }
-
-}, 60000)
+}
