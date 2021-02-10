@@ -1,23 +1,21 @@
 import * as alt from "alt";
 
-
-
-
 const URL = "http://resource/client/mw_menu/html/index.html";
 let View = null;
 let ActiveRooms = 0;
+let Intervals = null;
 
 alt.onServer("Init", Init)
 
 alt.onServer("lobby:menu", Init)
 alt.onServer("lobby:prepare", Prepare);
 alt.onServer("lobby:start", Start)
-alt.onServer("roomCount", (c) => {
-    ActiveRooms = c;
-})
-
+alt.onServer("roomCount", RoomCount)
 alt.on("lobby:goMenu", Init)
 
+function RoomCount(c){
+    ActiveRooms = c;
+}
 
 function Start() {
     View.emit("Hide");
@@ -29,13 +27,11 @@ function Start() {
 }
 
 function Prepare() {
-
     if (View) {
         View.emit("prepare");
         alt.showCursor(false);
         View.unfocus();
     }
-
 }
 
 function Init() {
@@ -51,26 +47,17 @@ function Init() {
     })
 
     alt.emitServer("getRoomCount")
-
     startIntervals();
 }
 
-let Intervals = null;
-
 function startIntervals() {
-
     Intervals = alt.setInterval(() => {
-
         if (View) {
-
             View.emit("allPlayerCount", alt.Player.all.length);
             View.emit("playersLooking", alt.Player.all.filter(P => P.getSyncedMeta("searching")).length);
             View.emit("activeRooms", ActiveRooms)
-
         }
-
     }, 1000)
-
 }
 
 
