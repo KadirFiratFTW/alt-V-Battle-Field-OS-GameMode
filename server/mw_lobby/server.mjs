@@ -8,6 +8,12 @@ const MaxPlayers = 40;
 const MaxPlayersTeam = 20;
 const MatchEndKillCount = 100;
 
+// Constants for game lobby.
+
+const POINTS = {
+    'kill': 100
+}
+
 const WeaponConst = {
     'M4': "weapon_carbinerifle",
     'AK47': "weapon_assaultrifle",
@@ -288,26 +294,16 @@ const WEAPON_COMBAT_TAG = {
     "2971687502": "v2",
     "2722615358": "v5",
     "2725352035": "FIST"
-
-
-
-
-
-
-
 }
 
-const POINTS = {
-    'kill': 100
-}
 
 alt.on("playerDeath", (victim, killer, weapon) => {
     if (killer.id !== victim.id) {
-
+        //Send kill points to killer.
         alt.emitClient(killer, "showPoint", POINTS['kill'], victim.pos)
-
     }
-
+    
+    //TRASH CODE ALERT. This code needs to be refactoring.
     if (!killer || killer.id == victim.id) {
         //SELF KILL
         const GetRoom = victim.getSyncedMeta("Room")
@@ -367,6 +363,7 @@ alt.on("playerDeath", (victim, killer, weapon) => {
 
 async function CheckGame(room, t1, t2) {
     let winner = null;
+    //Maybe there can be nice way for this conditions.
     if (t1 >= MatchEndKillCount) {
         winner = 1;
     }
@@ -400,33 +397,21 @@ alt.on("playerConnect", (p) => {
         { 'type': 'explosive', 'val': "Sticky Bomb" }
     ]);
     let username = p.name;
-
     const isUsernameUsed = alt.Player.all.find(P => P.name == username && P.id !== p.id);
     if (isUsernameUsed) {
         username = p.name + " (" + p.id + ")";
     }
     p.setSyncedMeta("UserName", username);
-
     alt.emitClient(p, "Init")
-
-
 })
 
 
 alt.onClient("GetLoadout", (player) => {
-
     const Loadout = player.getSyncedMeta("loadout");
     for (let L of Loadout) {
-
         player.giveWeapon(alt.hash(WeaponConst[L.val]), Ammo[L.type], Boolean(L.type == "primary"));
     }
-
 })
-
-
-
-
-
 
 //* Vote System *//
 
@@ -448,14 +433,12 @@ alt.onClient("vote:start", (player, target) => {
     RoomObject["ActiveVoteTeam" + Team].target = Target.id;
     RoomObject["ActiveVoteTeam" + Team].startDate = Date.now() + 60000;
 
-
     const RoomPlayers = alt.Player.all.filter(P => P.getSyncedMeta("Room") == Room && player.getSyncedMeta("Team") == Team);
     if (!RoomPlayers.length) return;
 
     for (let P of RoomPlayers) {
         alt.emitClient(P, "start:vote", player.getSyncedMeta("UserName"), Target.getSyncedMeta("UserName"));
     }
-
 
 })
 
@@ -479,6 +462,7 @@ alt.onClient("vote", async (player, type) => {
     for (let P of RoomPlayers) {
         alt.emitClient(P, "onVote", type, (type) ? FindRoom['ActiveVoteTeam' + Team].yes : FindRoom['ActiveVoteTeam' + Team].no)
     }
+    //Kick player if half of team is voted yes.
     if (FindRoom['ActiveVoteTeam' + Team].yes >= (MaxPlayersTeam / 2)) {
         KickPlayer(ROOM, FindRoom['ActiveVoteTeam' + Team].target);
         endVote(ROOM, Team);
@@ -508,7 +492,7 @@ function KickPlayer(room, target) {
     if (Player && Player.getSyncedMeta("Room") == room) {
 
         Player.kick("Oylama ile oyundan atıldın.");
-        //Tüm Oyunculara Chat Mesajı Gönder;
+        //TODO : Send all players notification of voting result;
     }
 
 }
