@@ -313,7 +313,7 @@ function OnPlayerDeath(victim, killer, weapon){
 }
 
 async function CheckGame(room, t1, t2) {
-    let winner = (t1 >= MatchEndKillCount) ? 1: (t2 >= MatchEndKillCount) ? 2: null;
+    let winner = (t1 >= MatchEndKillCount) ? 1 : (t2 >= MatchEndKillCount) ? 2: null;
     if (!winner) {
         return;
     }
