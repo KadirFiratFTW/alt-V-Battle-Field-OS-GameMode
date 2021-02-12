@@ -2,11 +2,11 @@ import alt from 'alt';
 import fs from 'fs';
 import path from 'path';
 
-const resourceDir = alt.getResourcePath('MilitaryWars');
+const resourceDir = alt.getResourcePath('alt-field');
 
 function LoadFiles() {
     let filesLoaded = 0;
-    const folders = fs.readdirSync(path.join(alt.rootDir, '/resources/MilitaryWars/server/'));
+    const folders = fs.readdirSync(path.join(alt.rootDir, '/resources/alt-field/server/'));
     const filterFolders = folders.filter(x => !x.includes('.js'));
     for (let i = 0; i < filterFolders.length; i++) {
         const folder = filterFolders[i];
