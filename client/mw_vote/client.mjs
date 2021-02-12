@@ -13,7 +13,7 @@ View.on("startVote", StartVoteServer)
 
 View.on("takeControls", takeControls);
 
-alt.onServer("start:vote", StarVote)
+alt.onServer("start:vote", StartVote)
 
 alt.onServer("onVoteEnd", OnVoteEnd)
 
