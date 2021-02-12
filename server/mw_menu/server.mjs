@@ -5,7 +5,7 @@ alt.on("onServerCreated", OnServerCreated)
 alt.onClient("getRoomCount", OnRoomCount)
 alt.onClient("startSearch", SearchStatus)
 
-function (player) {
+function OnRoomCount(player) {
     alt.emitClient(player, "roomCount", Rooms.length)
 }
 
