@@ -11,7 +11,7 @@ function LoadFiles() {
     for (let i = 0; i < filterFolders.length; i++) {
         const folder = filterFolders[i];
         const files = fs.readdirSync(
-            path.join(alt.rootDir, `/resources/MilitaryWars/server/${folder}`)
+            path.join(alt.rootDir, `/resources/alt-field/server/${folder}`)
         );
         const filterFiles = files.filter(x => x.includes('.js') || x.includes('.mjs'));
         for (let f = 0; f < filterFiles.length; f++) {
