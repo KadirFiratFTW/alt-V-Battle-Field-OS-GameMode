@@ -60,7 +60,7 @@ function OnPoint(point, pos){
 }
 
 function OnTick(){
-    PlayerPedReleationship();
+    PlayerPedRelationship();
     PointQueTick();
 }
 
